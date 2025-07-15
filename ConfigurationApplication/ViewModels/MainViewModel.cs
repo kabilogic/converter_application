@@ -17,6 +17,7 @@ namespace ConfigurationApplication.ViewModels
         private readonly TcpClientHelper _tcpHelper = new();
 
         public RS485Settings RS485 { get; set; } = new();
+        public EthernetSettings Ethernet { get; set; } = new();
 
         private string _macAddress;
         public string MACAddress
@@ -31,14 +32,16 @@ namespace ConfigurationApplication.ViewModels
 
         public ICommand SendRS485Command { get; }
         public ICommand ReadRS485Command { get; }
+        public ICommand SendEthernetCommand {  get; }
+        public ICommand ReadEthernetCommand { get; } 
         public ICommand GetMACCommand { get; }
 
-#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring as nullable.
         public MainViewModel()
-#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring as nullable.
         {
             SendRS485Command = new RelayCommand(SendRS485);
             ReadRS485Command = new RelayCommand(ReadRS485);
+            SendEthernetCommand = new RelayCommand(SendEthernet);
+            ReadEthernetCommand = new RelayCommand(ReadEthernet);
             GetMACCommand = new RelayCommand(GetMAC);
         }
 
@@ -72,6 +75,42 @@ namespace ConfigurationApplication.ViewModels
             _tcpHelper.Disconnect();
         }
 
+        private void SendEthernet()
+        {
+            if(_tcpHelper.Connect()) return;
+
+            byte[] config = new byte[81];
+
+            config[0] = Ethernet.IsStatic ? (byte)1 : (byte)0;
+            Encoding.ASCII.GetBytes(Ethernet.IP.PadRight(16, '\0')).CopyTo(config, 1);
+            Encoding.ASCII.GetBytes(Ethernet.Gateway.PadRight(16, '\0')).CopyTo(config, 17);
+            Encoding.ASCII.GetBytes(Ethernet.Netmask.PadRight(16, '\0')).CopyTo(config, 33);
+            Encoding.ASCII.GetBytes(Ethernet.DnsMain.PadRight(16, '\0')).CopyTo(config, 49);
+            Encoding.ASCII.GetBytes(Ethernet.DnsBackup.PadRight(16, '\0')).CopyTo(config, 65);
+            BitConverter.GetBytes(Ethernet.Port).CopyTo(config, 81 - 2);
+
+            _tcpHelper.SendCommand("SETNW", config);
+            _tcpHelper.Disconnect();
+        }
+
+        private void ReadEthernet()
+        {
+            if (!_tcpHelper.Connect()) return;
+
+            _tcpHelper.SendCommand("GETNW");
+            var buffer = _tcpHelper.ReadResponse(81);
+
+            Ethernet.IsStatic = buffer[0] == 1;
+            Ethernet.IP = Encoding.ASCII.GetString(buffer, 1, 16).Trim('\0');
+            Ethernet.Gateway = Encoding.ASCII.GetString(buffer, 17, 16).Trim('\0');
+            Ethernet.Netmask = Encoding.ASCII.GetString(buffer, 33, 16).Trim('\0');
+            Ethernet.DnsMain = Encoding.ASCII.GetString(buffer, 49, 16).Trim('\0');
+            Ethernet.DnsBackup = Encoding.ASCII.GetString(buffer, 65, 16).Trim('\0');
+            Ethernet.Port = BitConverter.ToUInt16(buffer, 79);
+
+            OnPropertyChanged(nameof(Ethernet));
+            _tcpHelper.Disconnect();
+        }
         private void GetMAC()
         {
             if (!_tcpHelper.Connect()) return;
