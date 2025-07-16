@@ -105,9 +105,15 @@
             <TextBlock Text="Device MAC Address:" FontWeight="Bold"/>
             <TextBlock Text="{Binding MACAddress}" Margin="0,0"/>
             <Button Content="Get MAC" Command="{Binding GetMACCommand}" Width="100" HorizontalAlignment="Left"/>
-            
-            
-        </StackPanel>
+
+                <Separator Margin="10"/>
+
+                <TextBlock Text="RESET" FontWeight="Bold"/>
+                <!--TextBlock Text="{Binding MACAddress}" Margin="0,0"/-->
+                <Button Content="Reset Device" Command="{Binding ResetCommand}" Width="100" HorizontalAlignment="Left"/>
+
+
+            </StackPanel>
         </ScrollViewer>
     </Grid>
 </Window>

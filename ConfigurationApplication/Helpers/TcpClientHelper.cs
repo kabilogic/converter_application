@@ -19,7 +19,7 @@ namespace ConfigurationApplication.Helpers
             try
             {
                 _client = new TcpClient();
-                _client.Connect(IP_ADDRESS, PORT);
+                _client.Connect(IP_ADDRESS, PORT); 
                 _stream = _client.GetStream();
                 return true;
             }

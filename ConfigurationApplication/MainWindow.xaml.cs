@@ -8,6 +8,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using ConfigurationApplication.ViewModels;
 
 namespace ConfigurationApplication;
 
@@ -19,6 +20,8 @@ public partial class MainWindow : Window
     public MainWindow()
     {
         InitializeComponent();
+        DataContext = new MainViewModel();
+
     }
 
     private void CheckBox_Checked(object sender, RoutedEventArgs e)
