@@ -8,6 +8,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Input;
 
 namespace ConfigurationApplication.ViewModels
@@ -18,6 +19,8 @@ namespace ConfigurationApplication.ViewModels
 
         public RS485Settings RS485 { get; set; } = new();
         public EthernetSettings Ethernet { get; set; } = new();
+        public ICommand PingCommand { get; }
+
 
         private string _macAddress;
         public string MACAddress
@@ -41,6 +44,7 @@ namespace ConfigurationApplication.ViewModels
             SendRS485Command = new RelayCommand(SendRS485);
             ReadRS485Command = new RelayCommand(ReadRS485);
             SendEthernetCommand = new RelayCommand(SendEthernet);
+            PingCommand = new RelayCommand(PingDevice);
             ReadEthernetCommand = new RelayCommand(ReadEthernet);
             GetMACCommand = new RelayCommand(GetMAC);
         }
@@ -91,6 +95,34 @@ namespace ConfigurationApplication.ViewModels
 
             _tcpHelper.SendCommand("SETNW", config);
             _tcpHelper.Disconnect();
+        }
+
+        private void PingDevice()
+        {
+            if (string.IsNullOrWhiteSpace(Ethernet.IP))
+            {
+                MessageBox.Show("Please enter a valid IP address.", "Input Error", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
+            try
+            {
+                using var ping = new System.Net.NetworkInformation.Ping();
+                var reply = ping.Send(Ethernet.IP, 1000); // 1 second timeout
+
+                if (reply.Status == System.Net.NetworkInformation.IPStatus.Success)
+                {
+                    MessageBox.Show($"Ping successful!\nTime: {reply.RoundtripTime} ms", "Ping Result", MessageBoxButton.OK, MessageBoxImage.Information);
+                }
+                else
+                {
+                    MessageBox.Show($"Ping failed: {reply.Status}", "Ping Result", MessageBoxButton.OK, MessageBoxImage.Warning);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Ping failed: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
         private void ReadEthernet()

@@ -56,12 +56,17 @@
                 <CheckBox IsChecked="{Binding Ethernet.IsStatic}" Width="150" Checked="CheckBox_Checked"/>
             </StackPanel>
 
-            <StackPanel Orientation="Horizontal" Margin="0,5">
+            <!--StackPanel Orientation="Horizontal" Margin="0,5">
                 <TextBlock Text="IP Address:" Width="100"/>
                 <TextBox Text="{Binding Ethernet.IP}" Width="150"/>
-            </StackPanel>
+            </StackPanel-->
+                <StackPanel Orientation="Horizontal" Margin="0,5">
+                    <TextBlock Text="IP Address:" Width="100"/>
+                    <TextBox Text="{Binding Ethernet.IP}" Width="150" Margin="0,0,10,0"/>
+                    <Button Content="Ping" Width="60" Command="{Binding PingCommand}" />
+                </StackPanel>
 
-            <StackPanel Orientation="Horizontal" Margin="0,5">
+                <StackPanel Orientation="Horizontal" Margin="0,5">
                 <TextBlock Text="Gateway:" Width="100"/>
                 <TextBox Text="{Binding Ethernet.Gateway}" Width="150"/>
             </StackPanel>
