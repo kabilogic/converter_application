@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:ConfigurationApplication" 
         xmlns:vm="clr-namespace:ConfigurationApplication.ViewModels"
         mc:Ignorable="d"
-        Title="Device Configurator" Height="450" Width="800">
+        Title="Device Configurator" Height="650" Width="900">
     <Window.DataContext>
         <vm:MainViewModel />
     </Window.DataContext>
@@ -48,25 +48,33 @@
             
           <!-- Ethernet Settings -->
             
+            
+            
             <Separator Margin="10"/>
-            <TextBlock Text="Ethernet Settings" FontWeight="Bold" Margin="0,10,0,5"/>
+
+            <StackPanel Orientation="Horizontal" Margin="0,10">
+                 <Button Content="Find Device"
+                 Command="{Binding FindDeviceCommand}"
+                 Width="120" />
+                 <TextBlock Text="{Binding FoundDeviceIp}" Margin="10,0,0,0" FontWeight="Bold" />
+            </StackPanel>
+
+                <TextBlock Text="Ethernet Settings" FontWeight="Bold" Margin="0,10,0,5"/>
 
             <StackPanel Orientation="Horizontal" Margin="0,5">
                 <TextBlock Text="Static IP:" Width="100"/>
                 <CheckBox IsChecked="{Binding Ethernet.IsStatic}" Width="150" Checked="CheckBox_Checked"/>
             </StackPanel>
 
-            <!--StackPanel Orientation="Horizontal" Margin="0,5">
-                <TextBlock Text="IP Address:" Width="100"/>
-                <TextBox Text="{Binding Ethernet.IP}" Width="150"/>
-            </StackPanel-->
-                <StackPanel Orientation="Horizontal" Margin="0,5">
-                    <TextBlock Text="IP Address:" Width="100"/>
-                    <TextBox Text="{Binding Ethernet.IP}" Width="150" Margin="0,0,10,0"/>
-                    <Button Content="Ping" Width="60" Command="{Binding PingCommand}" />
-                </StackPanel>
-
-                <StackPanel Orientation="Horizontal" Margin="0,5">
+            <!-- Ping IP -->
+            <StackPanel Orientation="Horizontal" Margin="0,5">
+                 <TextBlock Text="IP Address:" Width="100"/>   
+                 <TextBox Text="{Binding Ethernet.IP}" Width="150" Margin="0,0,10,0"/>   
+                 <Button Content="Ping" Width="60" Command="{Binding PingCommand}" />   
+            </StackPanel>        
+            <!-- Ping IP -->
+            
+            <StackPanel Orientation="Horizontal" Margin="0,5">    
                 <TextBlock Text="Gateway:" Width="100"/>
                 <TextBox Text="{Binding Ethernet.Gateway}" Width="150"/>
             </StackPanel>

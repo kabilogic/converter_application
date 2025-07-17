@@ -9,17 +9,24 @@ namespace ConfigurationApplication.Helpers
 {
     public  class TcpClientHelper
     {
-        private const string IP_ADDRESS = "192.168.0.130";
-        private const int PORT = 1502;
+        //private const string IP_ADDRESS = "192.168.0.120";
+        private string _ipAddress;
+        private int _port;
         private TcpClient? _client;
         private NetworkStream? _stream;
 
-        public bool Connect()
+        public TcpClientHelper(string ipAddress, int port = 1502)
         {
+            _ipAddress = ipAddress;
+            _port = port;
+        }
+
+        public bool Connect(string ip, int port = 1502)
+        { 
             try
             {
                 _client = new TcpClient();
-                _client.Connect(IP_ADDRESS, PORT); 
+                _client.Connect(_ipAddress, _port); 
                 _stream = _client.GetStream();
                 return true;
             }
