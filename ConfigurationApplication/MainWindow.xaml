@@ -3,123 +3,108 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:ConfigurationApplication" 
+        xmlns:local="clr-namespace:ConfigurationApplication"
         xmlns:vm="clr-namespace:ConfigurationApplication.ViewModels"
         mc:Ignorable="d"
         Title="Device Configurator" Height="650" Width="900">
+
     <Window.DataContext>
         <vm:MainViewModel />
     </Window.DataContext>
 
     <Grid Margin="10">
         <ScrollViewer VerticalScrollBarVisibility="Hidden">
-        <StackPanel>
-            
-            <!-- RTU Settings-->
-            
-            <TextBlock Text="RS485 Settings" FontWeight="Bold" Margin="0,0,0,5"/>
+            <StackPanel>
 
-            <StackPanel Orientation="Horizontal" Margin="0,5">
-                <TextBlock Text="Baud Rate:" Width="100"/>
-                <TextBox Text="{Binding RS485.BaudRate}" Width="150"/>
-            </StackPanel>
-
-            <StackPanel Orientation="Horizontal" Margin="0,5">
-                <TextBlock Text="Parity:" Width="100"/>
-                <TextBox Text="{Binding RS485.Parity}" Width="150"/>
-            </StackPanel>
-
-            <StackPanel Orientation="Horizontal" Margin="0,5">
-                <TextBlock Text="Data Bit:" Width="100"/>
-                <TextBox Text="{Binding RS485.DataBit}" Width="150"/>
-            </StackPanel>
-
-            <StackPanel Orientation="Horizontal" Margin="0,5">
-                <TextBlock Text="Stop Bit:" Width="100"/>
-                <TextBox Text="{Binding RS485.StopBit}" Width="150"/>
-            </StackPanel>
-            
-            <!-- Send and Receive RTU Config-->
-            
-            <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
-                <Button Content="Send RS485" Command="{Binding SendRS485Command}" Width="100" Margin="0,0,10,0"/>
-                <Button Content="Read RS485" Command="{Binding ReadRS485Command}" Width="100"/>
-            </StackPanel>
-            
-          <!-- Ethernet Settings -->
-            
-            
-            
-            <Separator Margin="10"/>
-
-            <StackPanel Orientation="Horizontal" Margin="0,10">
-                 <Button Content="Find Device"
-                 Command="{Binding FindDeviceCommand}"
-                 Width="120" />
-                 <TextBlock Text="{Binding FoundDeviceIp}" Margin="10,0,0,0" FontWeight="Bold" />
-            </StackPanel>
-
-                <TextBlock Text="Ethernet Settings" FontWeight="Bold" Margin="0,10,0,5"/>
-
-            <StackPanel Orientation="Horizontal" Margin="0,5">
-                <TextBlock Text="Static IP:" Width="100"/>
-                <CheckBox IsChecked="{Binding Ethernet.IsStatic}" Width="150" Checked="CheckBox_Checked"/>
-            </StackPanel>
-
-            <!-- Ping IP -->
-            <StackPanel Orientation="Horizontal" Margin="0,5">
-                 <TextBlock Text="IP Address:" Width="100"/>   
-                 <TextBox Text="{Binding Ethernet.IP}" Width="150" Margin="0,0,10,0"/>   
-                 <Button Content="Ping" Width="60" Command="{Binding PingCommand}" />   
-            </StackPanel>        
-            <!-- Ping IP -->
-            
-            <StackPanel Orientation="Horizontal" Margin="0,5">    
-                <TextBlock Text="Gateway:" Width="100"/>
-                <TextBox Text="{Binding Ethernet.Gateway}" Width="150"/>
-            </StackPanel>
-
-            <StackPanel Orientation="Horizontal" Margin="0,5">
-                <TextBlock Text="Netmask:" Width="100"/>
-                <TextBox Text="{Binding Ethernet.Netmask}" Width="150"/>
-            </StackPanel>
-
-            <StackPanel Orientation="Horizontal" Margin="0,5">
-                <TextBlock Text="DNS Main:" Width="100"/>
-                <TextBox Text="{Binding Ethernet.DnsMain}" Width="150"/>
-            </StackPanel>
-
-            <StackPanel Orientation="Horizontal" Margin="0,5">
-                <TextBlock Text="DNS Backup:" Width="100"/>
-                <TextBox Text="{Binding Ethernet.DnsBackup}" Width="150"/>
-            </StackPanel>
-
-            <StackPanel Orientation="Horizontal" Margin="0,5">
-                <TextBlock Text="Port:" Width="100"/>
-                <TextBox Text="{Binding Ethernet.Port}" Width="150"/>
-            </StackPanel>
-
-            <!-- Send and Receive Ethernet config -->
-            
-            <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
-                <Button Content="Read Ethernet" Command="{Binding ReadEthernetCommand}" Width="120" Margin="0,0,10,0"/>
-                <Button Content="Send Ethernet" Command="{Binding SendEthernetCommand}" Width="120"/>
-            </StackPanel>
-            
-            <!-- Get MAC of the Device -->
-            
-            <Separator Margin="10"/>
-
-            <TextBlock Text="Device MAC Address:" FontWeight="Bold"/>
-            <TextBlock Text="{Binding MACAddress}" Margin="0,0"/>
-            <Button Content="Get MAC" Command="{Binding GetMACCommand}" Width="100" HorizontalAlignment="Left"/>
+                <!-- RS485 Settings -->
+                <TextBlock Text="RS485 Settings" FontWeight="Bold" Margin="0,0,0,5"/>
+                <StackPanel Orientation="Horizontal" Margin="0,5">
+                    <TextBlock Text="Baud Rate:" Width="100"/>
+                    <TextBox Text="{Binding RS485.BaudRate}" Width="150"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Margin="0,5">
+                    <TextBlock Text="Parity:" Width="100"/>
+                    <TextBox Text="{Binding RS485.Parity}" Width="150"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Margin="0,5">
+                    <TextBlock Text="Data Bit:" Width="100"/>
+                    <TextBox Text="{Binding RS485.DataBit}" Width="150"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Margin="0,5">
+                    <TextBlock Text="Stop Bit:" Width="100"/>
+                    <TextBox Text="{Binding RS485.StopBit}" Width="150"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
+                    <Button Content="Send RS485" Command="{Binding SendRS485Command}" Width="100" Margin="0,0,10,0"/>
+                    <Button Content="Read RS485" Command="{Binding ReadRS485Command}" Width="100"/>
+                </StackPanel>
 
                 <Separator Margin="10"/>
 
-                <TextBlock Text="RESET" FontWeight="Bold"/>
-                <!--TextBlock Text="{Binding MACAddress}" Margin="0,0"/-->
-                <Button Content="Reset Device" Command="{Binding ResetCommand}" Width="100" HorizontalAlignment="Left"/>
+                <!-- Device Discovery -->
+                <StackPanel Orientation="Horizontal" Margin="0,10">
+                    <Button Content="Find Device" Command="{Binding FindDeviceCommand}" Width="120" />
+                    <TextBlock Text="{Binding FoundDeviceIp}" Margin="10,0,0,0" FontWeight="Bold" />
+                </StackPanel>
 
+                <StackPanel Orientation="Horizontal" Margin="0,5">
+                    <TextBlock Text="Select Device:" Width="100"/>
+                    <ComboBox ItemsSource="{Binding FoundDevices}" 
+                              SelectedItem="{Binding DeviceIp}" 
+                              Width="150"/>
+                </StackPanel>
+
+                <TextBlock Text="Selected IP:" FontWeight="Bold" Margin="0,5,0,0"/>
+                <TextBlock Text="{Binding DeviceIp}" Margin="0,0,0,10"/>
+
+                <!-- Ethernet Settings -->
+                <TextBlock Text="Ethernet Settings" FontWeight="Bold" Margin="0,10,0,5"/>
+                <StackPanel Orientation="Horizontal" Margin="0,5">
+                    <TextBlock Text="Static IP:" Width="100"/>
+                    <CheckBox IsChecked="{Binding Ethernet.IsStatic}" Width="150"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Margin="0,5">
+                    <TextBlock Text="IP Address:" Width="100"/>
+                    <TextBox Text="{Binding Ethernet.IP}" Width="150" Margin="0,0,10,0"/>
+                    <Button Content="Ping" Width="60" Command="{Binding PingCommand}" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Margin="0,5">
+                    <TextBlock Text="Gateway:" Width="100"/>
+                    <TextBox Text="{Binding Ethernet.Gateway}" Width="150"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Margin="0,5">
+                    <TextBlock Text="Netmask:" Width="100"/>
+                    <TextBox Text="{Binding Ethernet.Netmask}" Width="150"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Margin="0,5">
+                    <TextBlock Text="DNS Main:" Width="100"/>
+                    <TextBox Text="{Binding Ethernet.DnsMain}" Width="150"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Margin="0,5">
+                    <TextBlock Text="DNS Backup:" Width="100"/>
+                    <TextBox Text="{Binding Ethernet.DnsBackup}" Width="150"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Margin="0,5">
+                    <TextBlock Text="Port:" Width="100"/>
+                    <TextBox Text="{Binding Ethernet.Port}" Width="150"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
+                    <Button Content="Read Ethernet" Command="{Binding ReadEthernetCommand}" Width="120" Margin="0,0,10,0"/>
+                    <Button Content="Send Ethernet" Command="{Binding SendEthernetCommand}" Width="120"/>
+                </StackPanel>
+
+                <Separator Margin="10"/>
+
+                <!-- MAC Address -->
+                <TextBlock Text="Device MAC Address:" FontWeight="Bold"/>
+                <TextBlock Text="{Binding MACAddress}" Margin="0,0"/>
+                <Button Content="Get MAC" Command="{Binding GetMACCommand}" Width="100" HorizontalAlignment="Left"/>
+
+                <Separator Margin="10"/>
+
+                <!-- Reset -->
+                <TextBlock Text="RESET" FontWeight="Bold"/>
+                <Button Content="Reset Device" Command="{Binding ResetCommand}" Width="100" HorizontalAlignment="Left"/>
 
             </StackPanel>
         </ScrollViewer>

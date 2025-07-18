@@ -3,6 +3,7 @@ using ConfigurationApplication.Helpers;
 using ConfigurationApplication.Models;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Dynamic;
 using System.Linq;
@@ -22,15 +23,39 @@ namespace ConfigurationApplication.ViewModels
 
         public RS485Settings RS485 { get; set; } = new();
         public EthernetSettings Ethernet { get; set; } = new();
+        public ObservableCollection<string> FoundDevices { get; set; } = new();
+        
 
+        private string _foundDeviceIp;
         public string FoundDeviceIp
         {
             get => _foundDeviceIp;
             set { _foundDeviceIp = value; OnPropertyChanged(); }
         }
-        private string _foundDeviceIp;
 
-        public string DeviceIp { get; set; } = "";
+        private string _selectedDevice;
+        public string SelectedDevice { 
+            get => _selectedDevice;
+            set
+            {
+                _selectedDevice = value;
+                DeviceIp = value;
+                OnPropertyChanged();   
+            }
+        }
+
+        //public string DeviceIp { get; set; } = "";
+        private string _deviceIp;
+        public string DeviceIp
+        {
+            get => _deviceIp;
+            set
+            {
+                _deviceIp = value;
+                OnPropertyChanged(); 
+            }
+        }
+
 
         private string _macAddress;
         public string MACAddress
@@ -71,28 +96,42 @@ namespace ConfigurationApplication.ViewModels
             string subnet = "192.168.0";
 
             FoundDeviceIp = "Searching...";
+            FoundDevices.Clear();
 
-            for(int i = 1;i< 255; i++)
+            List<Task> scanTasks = new();
+            SemaphoreSlim throttler = new SemaphoreSlim(50);
+
+            for (int i = 1;i< 255; i++)
             {
+                await throttler.WaitAsync();
                 string ip = $"{subnet}.{i}";
-                try
+
+                scanTasks.Add(Task.Run(async () =>
                 {
-                    using TcpClient client = new();
-                    var connectTask = client.ConnectAsync(ip, PORT);
-                    if(await Task.WhenAny(connectTask, Task.Delay(100)) == connectTask && client.Connected)
+                    try
                     {
-                        FoundDeviceIp = $"Device found at {ip}";
-                        DeviceIp = ip;
-                        return;
+                        using TcpClient client = new();
+                        var connectTask = client.ConnectAsync(ip, PORT);
+                        if (await Task.WhenAny(connectTask, Task.Delay(2000)) == connectTask && client.Connected)
+                        {
+                            Application.Current.Dispatcher.Invoke(() => FoundDevices.Add(ip));
+                        }
                     }
-                }
-                catch
-                {
+                    catch
+                    {
 
+                    }
+                    finally
+                    {
+                        throttler.Release();
+                    }
+                }));
                 }
-            }
+            await Task.WhenAll(scanTasks);
 
-            FoundDeviceIp = "No Device found on network.";
+            FoundDeviceIp = FoundDevices.Any()
+                ? $"{FoundDevices.Count} device(s) found."
+                : "No Device found on network.";
         }
 
         private void SendRS485()
